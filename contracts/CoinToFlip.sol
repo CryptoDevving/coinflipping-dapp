@@ -30,7 +30,7 @@ contract CoinToFlip {
     event Payment(address indexed beneficiary, uint amount);
     event FailedPayment(address indexed beneficiary, uint amount);
 
-    constructor() public {
+    constructor() public payable {
         owner = msg.sender;
     }
     
