@@ -1,3 +1,4 @@
+const HDWalletProvider = require("truffle-hdwallet-provider");
 const path = require("path");
 
 module.exports = {
@@ -9,6 +10,18 @@ module.exports = {
       host: "localhost",
       port: 8545,
       network_id: '*'
+    },
+    ropsten:{
+      provider: () => new HDWalletProvider(process.env.MNENOMIC, "https://ethereum-ropsten-rpc.allthatnode.com/" + process.env.DSRV_API_KEY),
+      network_id: 3,
+      gas: 3000000,
+      gasPrice: 10000000000
+    },
+    main: {
+      provider: () => new HDWalletProvider(process.env.MNENOMIC, "https://ethereum-mainnet-rpc.allthatnode.com/" + process.env.DSRV_API_KEY),
+      network_id: 1,
+      gas: 975432,
+      gasPrice: 122000000000
     }
   }
 };
