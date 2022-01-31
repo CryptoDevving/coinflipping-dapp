@@ -5,7 +5,7 @@ import { InputGroup, FormControl, Radio } from 'react-bootstrap';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import "./css/bootstrap.min.css";
 import "./css/style.css";
-import { EthOne, CoinHeads, CoinTails } from './images';
+import { EthOne, CoinHeads, CoinTails, CoinUnknown } from './images';
 import getWeb3 from './utils/getWeb3';
 import CoinToFlip from './contracts/CoinToFlip.json';
 import * as Utils from 'web3-utils';
@@ -88,6 +88,42 @@ class CoinFlip extends Component {
         })
     }
 
+    handleClickFlip = async() => {
+        const {accounts, contract} = this.state;
+        if (!this.state.web3) {
+            console.log('App is not ready');
+            return;
+        }
+        if (accounts[0] === undefined) {
+            alert('Please refresh the webpage to activate metamask.');
+            return;
+        }
+        this.setState({
+            pending: true
+        });
+
+        try {
+            await contract.methods.revealResult().send({
+                from: accounts[0]
+            });
+            
+            this.saveBetStatus("");
+            this.setState({
+                pending: false,
+                show: {
+                    flag: false,
+                    msg: ''
+                }
+            });
+
+        } catch (e) {
+            console.log(e.message);
+            this.setState({
+                pending: false
+            })
+        }
+    }
+
     handleClickReset = () => {
         this.setState({value: 0, checked: 0, reveal: 0, reward: 0});
 
@@ -123,12 +159,22 @@ class CoinFlip extends Component {
 
     getHouseBalance = () => {
         const {web3, contract} = this.state;
-        web3.eth.getBalance(contract._address, (e, r) => {
+        web3.eth.getBalance(contract._address, (err, result) => {
             this.setState({
-                houseBalance: web3.utils.fromWei(r, 'ether')
+                houseBalance: web3.utils.fromWei(String(result), 'ether')
             });
         });
-    }   
+    }
+
+    watchEvent = (event) => {
+        const {web3} = this.state;
+        const reveal = parseInt(event.returnValues.reveal);
+        const reward = web3.utils.fromWei(event.returnValues.amount.toString(), 'ether');
+        this.setState({
+            reveal,
+            reward
+        })
+    }
 
     handleClickBet = async() => {
         const {web3, accounts, contract} = this.state;
@@ -215,9 +261,39 @@ class CoinFlip extends Component {
         }
     }
 
+    Reveal = (props) => {
+        // console.log("PROPS:", props)
+        console.log("P", props)
+        let coinImg = CoinUnknown;
+        if (props.reveal == 2) {
+            coinImg = CoinHeads;
+        }
+        if (props.reveal == 1) {
+            coinImg = CoinTails;
+        }
+
+        let coin = <Image src={coinImg} className="img-coin"></Image>
+
+        return (
+            <Panel bsStyle="info">
+                <Panel.Heading>
+                    <Panel.Title>
+                        <Glyphicon glyph="adjust">Coin Reveal</Glyphicon>
+                    </Panel.Title>
+                </Panel.Heading>
+                <Panel.Body className="custom-align-center">
+                    {coin}
+                    Ξ {props.reward}{props.reward>0?" YOU WIN!": "   GREAT PONZI YEAH!"}
+                </Panel.Body>
+            </Panel>
+        )
+    }
+
     render() {
 
         let AlertMsg = this.AlertMsg;
+
+        let Reveal = this.Reveal;
 
         let coin = 
             <div>
@@ -306,7 +382,7 @@ class CoinFlip extends Component {
 
                 <Row className="show-grid">
                     <Col md={5}>
-                        4
+                        <Reveal reveal={this.state.reveal} reward={this.state.reward} />
                     </Col>
                 </Row>
 
