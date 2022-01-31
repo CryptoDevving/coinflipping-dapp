@@ -6,6 +6,7 @@
 * You can remove your betting position and receive your investment even before flipping the coin by completing the transaction.
 ## Deployment Address
 * Contract: Ropsten Testnet Network [0x39D95dB2824c069018865824ee6FC0D7639d9359](https://etherscan.io/address/0x39D95dB2824c069018865824ee6FC0D7639d9359)
+* YouTube Explanation: https://www.youtube.com/watch?v=PprVPceLWow
 
 ## Reference
 * https://www.inflearn.com/course/dapp
