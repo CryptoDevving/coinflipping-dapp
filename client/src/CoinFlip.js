@@ -73,7 +73,7 @@ class CoinFlip extends Component {
         const {web3, contract} = this.state;
         web3.eth.getBalance(contract._address, (e, r) => {
             this.setState({
-                houseBalance: web3.utils.fromWei(r, 'ether');
+                houseBalance: web3.utils.fromWei(r, 'ether')
             });
         });
     }
@@ -191,6 +191,22 @@ class CoinFlip extends Component {
                                         </Radio>
                                     </InputGroup>
                                 </form>
+                                <ButtonToolbar>
+                                    <ButtonGroup justified>
+                                        <Button href="#" bsStyle="primary" bsSize="large" onClick={this.handleClickBet}>
+                                            Bet
+                                        </Button>
+                                        <Button href="#" bsStyle="success" bsSize="large" onClick={this.handleClickFlip}>
+                                            Flip!
+                                        </Button>
+                                        <Button href="#" bsSize="large" onClick={this.handleRefund}>
+                                            Refund
+                                        </Button>
+                                        <Button href="#" bsStyle="info" bsSize="large" onClick={this.handleClickReset}>
+                                            Clear
+                                        </Button>
+                                    </ButtonGroup>
+                                </ButtonToolbar>
                             </Panel.Body>
                         </Panel>
                     </Col>
