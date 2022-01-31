@@ -8,6 +8,7 @@ import "./css/style.css";
 import { EthOne, CoinHeads, CoinTails } from './images';
 import getWeb3 from './utils/getWeb3';
 import CoinToFlip from './contracts/CoinToFlip.json';
+import * as Utils from 'web3-utils';
 
 class CoinFlip extends Component {
 
@@ -166,7 +167,7 @@ class CoinFlip extends Component {
             if (!this.checkBetStatus()) {
                 const r = await contract.methods.placeBet(this.state.checked).send({
                     from: accounts[0],
-                    value: web3.util.toWei(String(this.state.value), 'ether')
+                    value: Utils.toWei(String(this.state.value), 'ether')
                 });
                 console.log(r.transactionHash);
                 this.saveBetStatus(r.transactionHash);
@@ -175,6 +176,7 @@ class CoinFlip extends Component {
                 })
             }
         } catch (e) {
+            console.log(web3)
             console.log(e.message);
         } finally {
             this.setState({
@@ -182,7 +184,6 @@ class CoinFlip extends Component {
             })
         }
     }
-
 
     AlertMsg = (props) => {
         if (props.show.flag) {
@@ -193,6 +194,25 @@ class CoinFlip extends Component {
             )
         }
         return <br/>
+    }
+
+    handleRefund = async() => {
+        const {accounts, contract} = this.state;
+        if (!this.state.web3) {
+            console.log('App is not ready');
+            return;
+        }
+        if (accounts[0] === undefined) {
+            alert('Please refresh the webpage to activate metamask.');
+            return;
+        }
+
+        const r = await contract.methods.refundBetBeforeReveal().send({
+            from: accounts[0]
+        })
+        if (r.transactionHash !== "") {
+            this.saveBetStatus("");
+        }
     }
 
     render() {
