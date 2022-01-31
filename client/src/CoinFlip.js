@@ -47,6 +47,10 @@ class CoinFlip extends Component {
         })
     }
 
+    handleValChange = (e) => {
+        this.setState({value: parseFloat(e.target.value)});
+    }
+
     checkBetStatus = () => {
         let bBet = false;
         if (localStorage.getItem("txHash") !== "") {
@@ -183,13 +187,19 @@ class CoinFlip extends Component {
                             <Panel.Body className="custom-align-center">
                                 <form>
                                     <InputGroup style={{paddingBottom:'10px'}}>
-                                        <Radio name="coinRadioGroup" checked={this.state.checked === 2} inline disabled>
+                                        <Radio name="coinRadioGroup" onChange={this.handleClickCoin} checked={this.state.checked === 2} inline disabled>
                                             Heads
                                         </Radio>
-                                        <Radio name="coinRadioGroup" checked={this.state.checked === 1} inline disabled>
+                                        <Radio name="coinRadioGroup" onChange={this.handleClickCoin} checked={this.state.checked === 1} inline disabled>
                                             Tails
                                         </Radio>
                                     </InputGroup>
+                                    <InputGroup style={{paddingBottom:'10px'}}>
+                                        <InputGroup.Addon>ETH</InputGroup.Addon>
+                                        <FormControl type="number" placeholder="Enter number" bsSize="lg"
+                                                     onChange={this.handleValChange} inputRef={(ref)=>this.inputEth=ref} min={0.01} max={10} step={0.01}/>
+                                    </InputGroup>
+                                    <AlertMsg show={this.state.show}/>
                                 </form>
                                 <ButtonToolbar>
                                     <ButtonGroup justified>
