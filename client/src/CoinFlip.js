@@ -47,6 +47,91 @@ class CoinFlip extends Component {
         })
     }
 
+    checkBetStatus = () => {
+        let bBet = false;
+        if (localStorage.getItem("txHash") !== "") {
+            this.setState({
+                pending: false
+            });
+            this.setState({
+                show: {
+                    flag: true,
+                    msg: 'You have already bet!'
+                }
+            });
+            bBet = true;
+        }
+        return bBet;
+    }
+
+    saveBetStatus = (txHash) => {
+        localStorage.setItem('txHash', txHash);
+        this.getHouseBalance();
+    }
+
+    getHouseBalance = () => {
+        const {web3, contract} = this.state;
+        web3.eth.getBalance(contract._address, (e, r) => {
+            this.setState({
+                houseBalance: web3.utils.fromWei(r, 'ether');
+            });
+        });
+    }
+
+    handleClickBet = async() => {
+        const {web3, accounts, contract} = this.state;
+        
+        if (!this.state.web3) {
+            console.log("App is not ready!");
+            return;
+        }
+
+        if (accounts[0] === undefined) {
+            alert('Please refresh the webpage to connect to your Metamask.');
+            return;
+        }
+
+        if (this.state.value <= 0 || this.state.checked === 0) {
+            this.setState({
+                show: {
+                    flag: true,
+                    msg: 'You should bet bigger than 0.01 ETH'
+                }
+            })
+            return;
+        }
+        
+        this.setState({
+            pending: true,
+            show: {
+                flag: true,
+                msg: ''
+            },
+            reveal: 0,
+            reward: 0
+        })
+
+        try {
+            if (!this.checkBetStatus()) {
+                const r = await contract.methods.placeBet(this.state.checked).send({
+                    from: accounts[0],
+                    value: web3.util.toWei(String(this.state.value), 'ether')
+                });
+                console.log(r.transactionHash);
+                this.saveBetStatus(r.transactionHash);
+                this.setState({
+                    pending: false
+                })
+            }
+        } catch (e) {
+            console.log(e.message);
+        } finally {
+            this.setState({
+                pending: false
+            })
+        }
+    }
+
     render() {
 
         let coin = 
