@@ -1,15 +1,11 @@
-import React, { Component } from 'react';
-
-import {Grid, Row, Col, Panel, Image, Alert} from 'react-bootstrap';
-import {Button, ButtonGroup, ButtonToolbar} from 'react-bootstrap';
-import {InputGroup, FormControl, Radio} from 'react-bootstrap';
+import React, {Component} from 'react';
+import {Grid, Row, Col, Panel, Image} from 'react-bootstrap';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
+import "./css/bootstrap.min.css";
+import "./css/style.css";
+import {EthOne} from './images';
 
-
-import './css/bootstrap.min.css';
-import './css/style.css';
-
-export class CoinFlip extends Component {
+class CoinFlip extends Component {
     constructor(props) {
         super(props);
     }
@@ -29,7 +25,7 @@ export class CoinFlip extends Component {
                             </Panel.Heading>
                             <Panel.Body className="custom-align-center">
                                 <div>
-                                    Hi!
+                                    <Image src={EthOne} id="EthOne"></Image>
                                 </div>
                             </Panel.Body>
                         </Panel>
