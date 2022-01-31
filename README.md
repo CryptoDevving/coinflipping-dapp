@@ -1,4 +1,5 @@
 # Simple Coin Flipping Game [CoinToFlip]
+[CoinToFlip](https://user-images.githubusercontent.com/41055141/151758670-fafd710e-a819-418a-9392-5b6b9432ac7b.png)
 ## Introduction
 * This is my first dApp! You can wager on whether the coin will land on the head or tail side.
 * After choosing your foreside and placing a minimum bet of 0.01 ETH, you can flip the coin by calling the revealResult function on the contract.
