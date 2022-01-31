@@ -1,13 +1,53 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col, Panel, Image } from 'react-bootstrap';
+import { Grid, Row, Col, Panel, Image, Alert } from 'react-bootstrap';
 import { Button, ButtonGroup, ButtonToolbar } from 'react-bootstrap';
 import { InputGroup, FormControl, Radio } from 'react-bootstrap';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import "./css/bootstrap.min.css";
 import "./css/style.css";
 import { EthOne, CoinHeads, CoinTails } from './images';
+import getWeb3 from './utils/getWeb3';
+import CoinToFlip from './contracts/CoinToFlip.json';
 
 class CoinFlip extends Component {
+
+    async componentDidMount() {
+
+        try {
+            // Get network provider and web3 instance.
+            const web3 = await getWeb3();
+
+            // Use web3 to get the user's accounts.
+            let accounts = await web3.eth.getAccounts();
+
+            // Get the contract instance.
+            const networkId = await web3.eth.net.getId();
+            const instance = new web3.eth.Contract(
+                CoinToFlip.abi,
+                '0xd803bb23a8bfc0ed8404b2ee113de3f3d8b7e87e'
+            );
+
+            //TODO-4
+            instance.events.Reveal()
+                .on('data', (event) => this.watchEvent(event))
+                .on('error', (error) => console.log(error));
+
+
+            // Metamask event subscription
+            // web3.currentProvider.publicConfigStore.on("update", (r) => {
+            //     if (r !== undefined) {
+            //         console.log(r);
+            //     }
+            // });
+
+            this.setState({web3, accounts, contract: instance}, this.getHouseBalance);
+
+        } catch (error) {
+            // Catch any errors for any of the above operations.
+            alert('Failed to load web3, accounts, or contract. Check console for details.');
+            console.log(error);
+        }
+    }
 
     state = {
         web3: null,
@@ -47,6 +87,13 @@ class CoinFlip extends Component {
         })
     }
 
+    handleClickReset = () => {
+        this.setState({value: 0, checked: 0, reveal: 0, reward: 0});
+
+        this.saveBetStatus("");
+        this.inputEth.value = '';
+    }
+
     handleValChange = (e) => {
         this.setState({value: parseFloat(e.target.value)});
     }
@@ -80,7 +127,7 @@ class CoinFlip extends Component {
                 houseBalance: web3.utils.fromWei(r, 'ether')
             });
         });
-    }
+    }   
 
     handleClickBet = async() => {
         const {web3, accounts, contract} = this.state;
@@ -136,7 +183,21 @@ class CoinFlip extends Component {
         }
     }
 
+
+    AlertMsg = (props) => {
+        if (props.show.flag) {
+            return (
+                <Alert bsStyle='danger'>
+                    <strong>{props.show.msg}</strong>
+                </Alert>
+            )
+        }
+        return <br/>
+    }
+
     render() {
+
+        let AlertMsg = this.AlertMsg;
 
         let coin = 
             <div>
