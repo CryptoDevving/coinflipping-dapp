@@ -309,8 +309,9 @@ class CoinFlip extends Component {
                         <Panel bsStyle="info">
                             <Panel.Heading>
                                 <Panel.Title>
-                                    <Glyphicon glyph="thumbs-up" />
-                                    House: 0 ETH
+                                    <Glyphicon glyph="thumbs-up">
+                                    House Balance: Ξ {this.state.houseBalance}
+                                    </Glyphicon>
                                 </Panel.Title>
                             </Panel.Heading>
                             <Panel.Body className="custom-align-center">
