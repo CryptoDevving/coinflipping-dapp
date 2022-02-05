@@ -7,7 +7,7 @@
 * You can remove your betting position and receive your investment even before flipping the coin by completing the transaction.
 ## Deployment Address
 * Deployed on IPFS using [fleek.co](fleek.co): https://curly-snow-0684.on.fleek.co/
-* Contract: Ropsten Testnet Network [0x39D95dB2824c069018865824ee6FC0D7639d9359](https://etherscan.io/address/0x39D95dB2824c069018865824ee6FC0D7639d9359)
+* Contract: 0xd803bb23a8bfC0ed8404B2EE113DE3f3d8b7e87e (Ropsten Network Ethereum)
 * YouTube Explanation: https://www.youtube.com/watch?v=PprVPceLWow
 
 ## Reference
